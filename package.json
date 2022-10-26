@@ -1,0 +1,19 @@
+{
+  "name": "niffler-bot",
+  "version": "1.0.0",
+  "description": "A simple bot to add streamelements points based on them messages!",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "Vinicius \"vcs\" Santos",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.1",
+    "moment-timezone": "^0.5.38",
+    "node-cron": "^3.0.2",
+    "tmi.js": "^1.8.5"
+  }
+}
