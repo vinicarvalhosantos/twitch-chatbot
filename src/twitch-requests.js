@@ -19,6 +19,7 @@ let twitchToken = {
 const getGamelistResult = async () => {
 
     if (!isStreamingOn) {
+        gamesPlayed = []
         return OFFLINE_RESULT;
     }
 
@@ -36,7 +37,7 @@ const getGamelistResult = async () => {
         return gamelistString;
     }
 
-    	gamesPlayed.push(playingGame)
+    gamesPlayed.push(playingGame)
 
     switch (gamesPlayed.length) {
         case 0:
@@ -89,52 +90,52 @@ const isValidToken = () => {
 }
 
 const getStreamerPlayingGame = async () => {
-            const data = await getStreamerStreamData()
+    const data = await getStreamerStreamData()
 
-            if (data.length === 0) {
+    if (data.length === 0) {
 
-                isStreamingOn = false
-                gamesPlayed = []
+        isStreamingOn = false
+        gamesPlayed = []
 
-                return OFFLINE_RESULT
-            } else {
+        return OFFLINE_RESULT
+    } else {
 
-                if (gamesPlayed.length === 0) {
-                    gamelistString = randomItemFromList(defaultGamelistMessages)
-                }
+        if (gamesPlayed.length === 0) {
+            gamelistString = randomItemFromList(defaultGamelistMessages)
+        }
 
-                isStreamingOn = true
-                const playingGame = data[0].game_name
+        isStreamingOn = true
+        const playingGame = data[0].game_name
 
-                if (!containsList(gamesPlayed, playingGame)) {
+        if (!containsList(gamesPlayed, playingGame)) {
 
-                    return playingGame
-                }
+            return playingGame
+        }
 
-                return null
-            }
+        return null
+    }
 }
 
 const getStreamerStreamData = async () => {
-	const apiUrlBase = process.env.TWITCH_API_URL_BASE;
+    const apiUrlBase = process.env.TWITCH_API_URL_BASE;
 
-	const userId = process.env.TWITCH_USER_ID
+    const userId = process.env.TWITCH_USER_ID
 
-	const config = {
+    const config = {
         headers: {
             "Authorization": `Bearer ${twitchToken.accessToken}`,
             "client-id": clientId
         }
     }
 
-	return await axios.get(`${apiUrlBase}/streams?user_id=${userId}`, config).then(resp => {
+    return await axios.get(`${apiUrlBase}/streams?user_id=${userId}`, config).then(resp => {
         if (resp.status === 200) {
 
             return resp.data.data
 
         }
 
-	return []
+        return []
     }).catch((err) => {
         console.error(`An error occurred when try to get the playing game: ${err}`)
         return null
@@ -143,17 +144,17 @@ const getStreamerStreamData = async () => {
 }
 
 const checkStreamerInLive = async () => {
-	if (!isValidToken()) {
-        	await getTwitchToken();
-    	}
+    if (!isValidToken()) {
+        await getTwitchToken();
+    }
 
-	const streamData = await getStreamerStreamData()
-	
-	if (streamData.length === 0){
-		isStreamingOn = false
-	}else{
-		isStreamingOn = true
-	}
+    const streamData = await getStreamerStreamData()
+
+    if (streamData.length === 0) {
+        isStreamingOn = false
+    } else {
+        isStreamingOn = true
+    }
 }
 
 module.exports = { getGamelistResult, checkStreamerInLive }
